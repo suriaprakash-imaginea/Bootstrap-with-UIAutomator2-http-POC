@@ -31,9 +31,21 @@ public class HttpServer extends NanoHTTPD {
     public Response serve(String uri, String method, Properties header,
                           Properties params, Properties files) {
         String res;
-        if(!"POST".equalsIgnoreCase(method) || null == params.getProperty("json")) {
+        if(!"POST".equalsIgnoreCase(method)) {
             res = new AndroidCommandResult(WDStatus.UNKNOWN_ERROR,
                     "Only POST requests are supported by BootStrap server").toString();
+            return new Response(HTTP_INTERNALERROR, "application/json", res);
+        }
+
+        if(null == params.getProperty("json")) {
+            res = new AndroidCommandResult(WDStatus.UNKNOWN_ERROR,
+                    "Only application/json mime-type is supported by BootStrap server").toString();
+            return new Response(HTTP_INTERNALERROR, "application/json", res);
+        }
+
+        if(!"/execute-command".equalsIgnoreCase(uri)) {
+            res = new AndroidCommandResult(WDStatus.UNKNOWN_ERROR,
+                    "HTTP URI can only be http://host:port/execute-command").toString();
             return new Response(HTTP_INTERNALERROR, "application/json", res);
         }
 
