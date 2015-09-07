@@ -26,7 +26,9 @@ public class AndroidCommand {
             CommandTypeException {
         json = new JSONObject(jsonStr);
         setType(json.getString("cmd"));
-        params = params();
+        if(AndroidCommandType.ACTION == cmdType) {
+            params = params();
+        }
     }
 
     /**
