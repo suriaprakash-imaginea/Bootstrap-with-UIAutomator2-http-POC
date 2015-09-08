@@ -3,8 +3,9 @@ package devices.android.bootstrap;
 import android.support.test.uiautomator.UiDevice;
 import android.test.InstrumentationTestCase;
 
-import devices.android.bootstrap.server.v2_2.HttpServer;
-
+import devices.android.bootstrap.server.netty.HttpServer;
+//import devices.android.bootstrap.server.v2_2.HttpServer;
+//import devices.android.bootstrap.server.HttpServer ;
 public class Bootstrap extends InstrumentationTestCase {
 
     private static UiDevice device;
