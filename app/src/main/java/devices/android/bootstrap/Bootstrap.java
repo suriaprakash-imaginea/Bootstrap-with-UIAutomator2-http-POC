@@ -3,6 +3,7 @@ package devices.android.bootstrap;
 import android.support.test.uiautomator.UiDevice;
 import android.test.InstrumentationTestCase;
 
+import devices.android.bootstrap.server.netty.HttpReqestHandler;
 import devices.android.bootstrap.server.netty.HttpServer;
 //import devices.android.bootstrap.server.v2_2.HttpServer;
 //import devices.android.bootstrap.server.HttpServer ;
@@ -16,7 +17,9 @@ public class Bootstrap extends InstrumentationTestCase {
         super.setUp();
         device = UiDevice.getInstance(getInstrumentation());
         device.pressHome();
-        new HttpServer(8080);
+        HttpServer httpServer = new HttpServer(8080);
+        httpServer.addHandler(new HttpReqestHandler());
+        httpServer.start();
     }
 
     /**
