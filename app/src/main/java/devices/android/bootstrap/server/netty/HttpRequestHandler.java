@@ -1,9 +1,7 @@
 package devices.android.bootstrap.server.netty;
 
 import org.json.JSONException;
-
 import java.util.NoSuchElementException;
-
 import devices.android.bootstrap.AndroidCommand;
 import devices.android.bootstrap.AndroidCommandExecutor;
 import devices.android.bootstrap.AndroidCommandResult;
@@ -28,29 +26,26 @@ public class HttpRequestHandler implements  HttpServlet{
         String method = httpRequest.method();
         String uri = httpRequest.uri();
         String body = httpRequest.body();
-
         httpResponse.setContentType("application/json");
+
         if(method!="POST") {
             res = new AndroidCommandResult(WDStatus.UNKNOWN_ERROR,
                     "Only POST requests are supported by BootStrap server").toString();
             httpResponse.setContent(res);
             httpResponse.setStatus(500);
         }
-
         else if(null == body) {
             res = new AndroidCommandResult(WDStatus.UNKNOWN_ERROR,
                     "Only application/json mime-type is supported by BootStrap server").toString();
             httpResponse.setContent(res);
             httpResponse.setStatus(500);
         }
-
         else if (!"/execute-command".equalsIgnoreCase(uri)) {
             res = new AndroidCommandResult(WDStatus.UNKNOWN_ERROR,
                     "HTTP URI can only be http://host:port/execute-command").toString();
             httpResponse.setContent(res);
             httpResponse.setStatus(500);
         }
-
         else {
             String jsonBody = body;
             try {
@@ -59,14 +54,16 @@ public class HttpRequestHandler implements  HttpServlet{
                 res = runCommand(cmd);
                 Logger.debug("Returning result: " + res);
                 httpResponse.setContent(res);
+                httpResponse.setStatus(200);
             } catch (CommandTypeException e) {
                 res = new AndroidCommandResult(WDStatus.UNKNOWN_ERROR, e.getMessage())
                         .toString();
+                httpResponse.setStatus(500);
             } catch (final JSONException e) {
                 res = new AndroidCommandResult(WDStatus.UNKNOWN_ERROR,
                         "Error running and parsing command" + e.toString()).toString();
+                httpResponse.setStatus(500);
             }
-            httpResponse.setStatus(200);
             httpResponse.setContent(res);
             httpResponse.end();
         }
