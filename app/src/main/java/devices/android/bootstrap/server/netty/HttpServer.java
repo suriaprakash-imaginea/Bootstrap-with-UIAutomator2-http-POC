@@ -16,16 +16,6 @@ package devices.android.bootstrap.server.netty;
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-import org.json.JSONException;
-
-import devices.android.bootstrap.AndroidCommand;
-import devices.android.bootstrap.AndroidCommandExecutor;
-import devices.android.bootstrap.AndroidCommandResult;
-import devices.android.bootstrap.AndroidCommandType;
-import devices.android.bootstrap.Bootstrap;
-import devices.android.bootstrap.Logger;
-import devices.android.bootstrap.WDStatus;
-import devices.android.bootstrap.exceptions.CommandTypeException;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
