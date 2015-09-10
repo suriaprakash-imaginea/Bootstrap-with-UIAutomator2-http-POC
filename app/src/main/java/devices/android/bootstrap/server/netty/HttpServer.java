@@ -24,12 +24,39 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class HttpServer{
     private final int port;
     private Thread serverThread;
     private final List<HttpServlet> handlers = new ArrayList<HttpServlet>();
 
+    private final ReentrantLock lock = new ReentrantLock();
+    private Condition shutdownCondition = lock.newCondition();
+    private boolean keepListening = true;
+
+    public void waitForServerShutdown() throws InterruptedException {
+        try {
+            lock.lock();
+            while (keepListening) {
+                shutdownCondition.await();
+            }
+            this.stop();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void stopServer() {
+        try {
+            lock.lock();
+            keepListening = false;
+            shutdownCondition.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
 
     public HttpServer(int port) {
         this.port = port;

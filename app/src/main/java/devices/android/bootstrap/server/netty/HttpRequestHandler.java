@@ -2,6 +2,9 @@ package devices.android.bootstrap.server.netty;
 
 import org.json.JSONException;
 import java.util.NoSuchElementException;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
 import devices.android.bootstrap.AndroidCommand;
 import devices.android.bootstrap.AndroidCommandExecutor;
 import devices.android.bootstrap.AndroidCommandResult;
@@ -17,6 +20,7 @@ import devices.android.bootstrap.exceptions.CommandTypeException;
 public class HttpRequestHandler implements  HttpServlet{
 
     private AndroidCommandExecutor executor;
+    private HttpServer httpServer;
 
     @Override
     public void handleHttpRequest(HttpRequest httpRequest, HttpResponse httpResponse)
@@ -73,7 +77,7 @@ public class HttpRequestHandler implements  HttpServlet{
         AndroidCommandResult res;
         executor = new AndroidCommandExecutor();
         if (cmd.commandType() == AndroidCommandType.SHUTDOWN) {
-            Bootstrap.keepListening = false;
+            httpServer.stopServer();
             res = new AndroidCommandResult(WDStatus.SUCCESS, "OK, shutting down");
         } else if (cmd.commandType() == AndroidCommandType.ACTION) {
             try {
@@ -93,5 +97,8 @@ public class HttpRequestHandler implements  HttpServlet{
         return res.toString();
     }
 
+    public void setHttpServer(HttpServer httpServer) {
+        this.httpServer = httpServer;
+    }
 
 }

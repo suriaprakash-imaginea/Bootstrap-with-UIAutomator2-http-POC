@@ -10,25 +10,24 @@ import devices.android.bootstrap.server.netty.HttpServer;
 public class Bootstrap extends InstrumentationTestCase {
 
     private static UiDevice device;
-    public static boolean keepListening = true;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        device = UiDevice.getInstance(getInstrumentation());
-        device.pressHome();
-        HttpServer httpServer = new HttpServer(8080);
-        httpServer.addHandler(new HttpRequestHandler());
-        httpServer.start();
     }
 
     /**
      * This test will run forever till the server shutdown signal is received from the client
      */
     public void testUIActions() throws Exception {
-        while (keepListening) {
-            // Do Nothing. Just wait for requests from client through JSON-WP
-        }
+        device = UiDevice.getInstance(getInstrumentation());
+        device.pressHome();
+        HttpServer httpServer = new HttpServer(8080);
+        HttpRequestHandler requestHandler = new HttpRequestHandler();
+        requestHandler.setHttpServer(httpServer);
+        httpServer.addHandler(requestHandler);
+        httpServer.start();
+        httpServer.waitForServerShutdown();
     }
 
     public static UiDevice getDevice() {

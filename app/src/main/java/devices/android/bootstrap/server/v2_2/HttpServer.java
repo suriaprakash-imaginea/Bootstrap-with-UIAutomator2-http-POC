@@ -88,7 +88,7 @@ public class HttpServer extends NanoHTTPD {
     private String runCommand(final AndroidCommand cmd) {
         AndroidCommandResult res;
         if (cmd.commandType() == AndroidCommandType.SHUTDOWN) {
-            Bootstrap.keepListening = false;
+            //Bootstrap.keepListening = false;
             res = new AndroidCommandResult(WDStatus.SUCCESS, "OK, shutting down");
         } else if (cmd.commandType() == AndroidCommandType.ACTION) {
             try {
