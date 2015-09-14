@@ -69,8 +69,9 @@ public class HttpRequestHandler implements  HttpServlet{
                 httpResponse.setStatus(500);
             }
             httpResponse.setContent(res);
-            httpResponse.end();
+
         }
+        httpResponse.end();
     }
 
     private String runCommand(final AndroidCommand cmd) {
